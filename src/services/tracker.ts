@@ -53,7 +53,6 @@ export async function discoverTraders(): Promise<TrackedTrader[]> {
     minPnl: config.minPnl,
     minRoi: config.minRoi,
     minAccountValue: config.minAccountValue,
-    labels: ["Fund", "Smart Trader"],
     perPage: config.topTraders,
   });
 
@@ -85,7 +84,7 @@ export async function updateTrader(trader: TrackedTrader): Promise<TrackedTrader
   try {
     // Fetch current positions
     const posRes = await fetchPositions(trader.address);
-    const positions: PerpPosition[] = posRes.data || [];
+    const positions: PerpPosition[] = Array.isArray(posRes.data) ? posRes.data : [];
 
     // Fetch recent trades (last 24hr)
     const now = new Date();
