@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hyperliquid perpetual copytrading dashboard — discover and track top traders via Nansen API">
+  <title>NansenHyperliquid — Copytrade Tracker</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+  <header class="header">
+    <div class="header__icon">⚡</div>
+    <h1 class="header__title">Hyperliquid Copytrade Tracker</h1>
+    <p class="header__subtitle">Autonomous monitoring of top perpetual traders — powered by Nansen</p>
+  </header>
+
+  <div class="stats-bar" id="statsBar">
+    <div class="stat">
+      <span class="stat__dot stat__dot--off" id="daemonDot"></span>
+      <span id="daemonStatus">Waiting for data...</span>
+    </div>
+    <div class="stat"><span id="traderCount">0</span>&nbsp;traders</div>
+    <div class="stat"><span id="positionCount">0</span>&nbsp;positions</div>
+    <div class="stat"><span id="alertCount">0</span>&nbsp;alerts</div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab tab--active" data-tab="traders" id="tabTraders">Traders</button>
+    <button class="tab" data-tab="alerts" id="tabAlerts">Alerts</button>
+  </nav>
+
+  <main class="container">
+    <div id="tradersView" class="trader-grid"></div>
+    <div id="alertsView" class="alerts-feed" style="display:none"></div>
+  </main>
+
+  <footer class="footer">
+    Built by <a href="https://github.com/edycutjong" target="_blank">@edycutjong</a> · Powered by <a href="https://nansen.ai" target="_blank">Nansen API</a> · Hyperliquid Perp Data
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
