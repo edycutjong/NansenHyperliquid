@@ -1,35 +1,37 @@
 /* ──────────────────────────────────────────────────
    NansenHyperliquid — Copytrade Dashboard Styles
-   Dark mode · Neon accents · Terminal aesthetic
+   Hyperliquid brand palette · Glassmorphism
    ────────────────────────────────────────────────── */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  --bg-primary: #070710;
-  --bg-secondary: #0d0d18;
-  --bg-card: rgba(14, 14, 26, 0.75);
-  --bg-card-hover: rgba(22, 22, 40, 0.85);
+  /* ── Hyperliquid Brand Palette ── */
+  --bg-primary: #0b0e11;
+  --bg-secondary: #0f1a1e;
+  --bg-card: rgba(27, 36, 41, 0.70);
+  --bg-card-hover: rgba(35, 48, 54, 0.85);
   --border-glass: rgba(255, 255, 255, 0.05);
-  --border-glow: rgba(124, 58, 237, 0.35);
+  --border-glow: rgba(80, 210, 193, 0.30);
 
-  --text-primary: #e4e4f0;
-  --text-secondary: #8a8aa0;
-  --text-muted: #4a4a64;
+  --text-primary: #e4e8ea;
+  --text-secondary: #878c8f;
+  --text-muted: #4a5258;
 
-  --accent-violet: #7c3aed;
-  --accent-cyan: #06b6d4;
-  --accent-emerald: #10b981;
-  --accent-rose: #f43f5e;
+  --accent-hl: #50d2c1;          /* Hyperliquid primary teal-green */
+  --accent-hl-bright: #97fce8;   /* Hyperliquid bright green */
+  --accent-emerald: #1fa67d;     /* Hyperliquid deep green */
+  --accent-rose: #ed7088;        /* Hyperliquid sell/red */
+  --accent-rose-deep: #732a36;
   --accent-amber: #f59e0b;
   --accent-blue: #3b82f6;
 
-  --gradient-header: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
-  --gradient-long: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
-  --gradient-short: linear-gradient(135deg, #f43f5e 0%, #f59e0b 100%);
+  --gradient-header: linear-gradient(135deg, #50d2c1 0%, #1fa67d 100%);
+  --gradient-long: linear-gradient(135deg, #50d2c1 0%, #97fce8 100%);
+  --gradient-short: linear-gradient(135deg, #ed7088 0%, #f59e0b 100%);
 
-  --shadow-glow: 0 0 30px rgba(124, 58, 237, 0.12);
-  --shadow-glow-cyan: 0 0 20px rgba(6, 182, 212, 0.1);
+  --shadow-glow: 0 0 30px rgba(80, 210, 193, 0.12);
+  --shadow-glow-bright: 0 0 20px rgba(151, 252, 228, 0.1);
 
   --radius-sm: 8px;
   --radius-md: 14px;
@@ -47,25 +49,47 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 15% 15%, rgba(124, 58, 237, 0.07) 0%, transparent 50%),
-    radial-gradient(ellipse at 85% 80%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 0;
+/* ── Animated Background Mesh ── */
+.bg-mesh {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
 }
+.bg-mesh__orb {
+  position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.5;
+}
+.bg-mesh__orb--1 {
+  width: 600px; height: 600px; top: -15%; left: -10%;
+  background: radial-gradient(circle, rgba(80, 210, 193, 0.10) 0%, transparent 70%);
+  animation: orbFloat1 20s ease-in-out infinite;
+}
+.bg-mesh__orb--2 {
+  width: 500px; height: 500px; bottom: -10%; right: -5%;
+  background: radial-gradient(circle, rgba(31, 166, 125, 0.08) 0%, transparent 70%);
+  animation: orbFloat2 25s ease-in-out infinite;
+}
+.bg-mesh__orb--3 {
+  width: 400px; height: 400px; top: 40%; left: 50%;
+  background: radial-gradient(circle, rgba(237, 112, 136, 0.04) 0%, transparent 70%);
+  animation: orbFloat3 30s ease-in-out infinite;
+}
+@keyframes orbFloat1 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(60px,40px)} 66%{transform:translate(-30px,80px)} }
+@keyframes orbFloat2 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(-50px,-30px)} 66%{transform:translate(40px,-60px)} }
+@keyframes orbFloat3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-80px,50px)} }
 
 /* ── Header ── */
 .header {
   position: relative; z-index: 1;
   text-align: center; padding: 40px 24px 24px;
 }
-.header__icon { font-size: 44px; margin-bottom: 8px; }
+.header__icon {
+  margin-bottom: 8px;
+  display: flex; justify-content: center; align-items: center;
+  animation: headerPulse 4s ease-in-out infinite;
+}
+@keyframes headerPulse { 0%,100%{filter:drop-shadow(0 0 8px rgba(80,210,193,0.3))} 50%{filter:drop-shadow(0 0 20px rgba(80,210,193,0.6))} }
+
 .header__title {
   font-size: 2.2rem; font-weight: 700;
   background: var(--gradient-header);
@@ -85,9 +109,10 @@ body::before {
   color: var(--text-secondary);
   font-family: var(--font-mono);
 }
+.stat__icon { color: var(--text-muted); flex-shrink: 0; }
 .stat__dot {
   width: 7px; height: 7px; border-radius: 50%;
-  background: var(--accent-emerald); box-shadow: 0 0 6px var(--accent-emerald);
+  background: var(--accent-hl); box-shadow: 0 0 6px var(--accent-hl);
   animation: pulse 2s ease-in-out infinite;
 }
 .stat__dot--off { background: var(--text-muted); box-shadow: none; animation: none; }
@@ -105,12 +130,16 @@ body::before {
   color: var(--text-secondary); font-family: var(--font-sans);
   font-size: 0.8rem; font-weight: 500; cursor: pointer;
   transition: all 0.2s ease;
+  display: inline-flex; align-items: center; gap: 6px;
 }
+.tab svg { opacity: 0.5; transition: opacity 0.2s; }
 .tab:hover { background: rgba(255,255,255,0.03); color: var(--text-primary); }
+.tab:hover svg { opacity: 0.8; }
 .tab--active {
-  background: rgba(124, 58, 237, 0.12); border-color: var(--accent-violet);
-  color: var(--accent-violet);
+  background: rgba(80, 210, 193, 0.10); border-color: var(--accent-hl);
+  color: var(--accent-hl);
 }
+.tab--active svg { opacity: 1; }
 
 /* ── Container ── */
 .container {
@@ -144,9 +173,9 @@ body::before {
 .trader-card__header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
 .trader-card__rank {
   width: 32px; height: 32px; border-radius: 8px;
-  background: rgba(124, 58, 237, 0.15); border: 1px solid rgba(124, 58, 237, 0.3);
+  background: rgba(80, 210, 193, 0.12); border: 1px solid rgba(80, 210, 193, 0.25);
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.8rem; font-weight: 700; color: var(--accent-violet);
+  font-size: 0.8rem; font-weight: 700; color: var(--accent-hl);
   font-family: var(--font-mono);
 }
 .trader-card__address {
@@ -155,8 +184,8 @@ body::before {
 }
 .trader-card__label {
   font-size: 0.65rem; padding: 3px 8px; border-radius: 4px;
-  background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.25);
-  color: var(--accent-cyan); font-weight: 500;
+  background: rgba(80, 210, 193, 0.08); border: 1px solid rgba(80, 210, 193, 0.20);
+  color: var(--accent-hl); font-weight: 500;
 }
 
 /* ── Metrics Row ── */
@@ -167,7 +196,7 @@ body::before {
 }
 .metric-box__label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 4px; }
 .metric-box__value { font-size: 1rem; font-weight: 700; font-family: var(--font-mono); }
-.metric-box__value--green { color: var(--accent-emerald); }
+.metric-box__value--green { color: var(--accent-hl-bright); }
 .metric-box__value--red { color: var(--accent-rose); }
 
 /* ── Positions Table ── */
@@ -182,9 +211,10 @@ body::before {
 .position__side {
   font-size: 0.6rem; font-weight: 600; padding: 2px 6px; border-radius: 3px;
   text-transform: uppercase; letter-spacing: 0.05em;
+  display: inline-flex; align-items: center; gap: 3px;
 }
-.position__side--long { background: rgba(16,185,129,0.12); color: var(--accent-emerald); }
-.position__side--short { background: rgba(244,63,94,0.12); color: var(--accent-rose); }
+.position__side--long { background: rgba(80,210,193,0.12); color: var(--accent-hl); }
+.position__side--short { background: rgba(237,112,136,0.12); color: var(--accent-rose); }
 .position__symbol { font-family: var(--font-mono); font-weight: 600; }
 .position__value { font-family: var(--font-mono); color: var(--text-secondary); font-size: 0.75rem; }
 .position__pnl { font-family: var(--font-mono); font-size: 0.75rem; }
@@ -198,7 +228,16 @@ body::before {
   transition: border-color 0.2s;
 }
 .alert-item:hover { border-color: var(--border-glow); }
-.alert-item__icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+.alert-item__icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.alert-item__icon--open { background: rgba(80,210,193,0.12); color: var(--accent-hl); }
+.alert-item__icon--close { background: rgba(237,112,136,0.12); color: var(--accent-rose); }
+.alert-item__icon--change { background: rgba(59,130,246,0.12); color: var(--accent-blue); }
+.alert-item__icon--trade { background: rgba(245,158,11,0.12); color: var(--accent-amber); }
+
 .alert-item__body { flex: 1; }
 .alert-item__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
 .alert-item__title { font-size: 0.8rem; font-weight: 600; }
@@ -211,7 +250,10 @@ body::before {
   text-align: center; padding: 60px 24px;
   color: var(--text-muted); font-size: 0.9rem;
 }
-.empty-state__icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state__icon {
+  margin-bottom: 16px; display: flex; justify-content: center;
+  opacity: 0.4;
+}
 .skeleton {
   background: linear-gradient(90deg, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.02) 75%);
   background-size: 200% 100%; animation: shimmer 1.5s ease-in-out infinite; border-radius: var(--radius-sm);
@@ -220,8 +262,8 @@ body::before {
 
 .error-msg {
   color: var(--accent-rose); font-size: 0.75rem; font-family: var(--font-mono);
-  padding: 10px; background: rgba(244,63,94,0.08); border-radius: var(--radius-sm);
-  border: 1px solid rgba(244,63,94,0.15);
+  padding: 10px; background: rgba(237,112,136,0.08); border-radius: var(--radius-sm);
+  border: 1px solid rgba(237,112,136,0.15);
 }
 
 /* ── Footer ── */
@@ -230,7 +272,12 @@ body::before {
   text-align: center; padding: 32px 24px 48px;
   color: var(--text-muted); font-size: 0.7rem;
 }
-.footer a { color: var(--accent-violet); text-decoration: none; }
+.footer__brand {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-bottom: 6px; font-weight: 500; font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+.footer a { color: var(--accent-hl); text-decoration: none; }
 .footer a:hover { text-decoration: underline; }
 
 /* ── Responsive ── */

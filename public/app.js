@@ -4,6 +4,25 @@
 
 const REFRESH_INTERVAL = 30_000; // 30s
 
+// ── SVG Icons (replace all emoji) ──
+
+const ICONS = {
+  bolt: `<svg width="40" height="40" viewBox="0 0 52 52" fill="none"><defs><linearGradient id="eg" x1="0" y1="0" x2="52" y2="52"><stop offset="0%" stop-color="#50d2c1"/><stop offset="100%" stop-color="#1fa67d"/></linearGradient></defs><path d="M30 4L12 28h12L20 48l20-26H28L34 4h-4z" fill="url(#eg)" opacity="0.7"/></svg>`,
+  bell: `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`,
+  arrowUp: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>`,
+  arrowDown: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/></svg>`,
+  xCircle: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/></svg>`,
+  refresh: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>`,
+  chart: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>`,
+};
+
+const ALERT_ICONS = {
+  new_position: `<div class="alert-item__icon alert-item__icon--open">${ICONS.arrowUp}</div>`,
+  position_closed: `<div class="alert-item__icon alert-item__icon--close">${ICONS.arrowDown}</div>`,
+  position_changed: `<div class="alert-item__icon alert-item__icon--change">${ICONS.refresh}</div>`,
+  new_trade: `<div class="alert-item__icon alert-item__icon--trade">${ICONS.chart}</div>`,
+};
+
 // ── Formatters ──
 
 function fmtUsd(v) {
@@ -74,10 +93,11 @@ function renderTraderCard(trader, rank) {
     .slice(0, 5)
     .map((p) => {
       const side = p.size > 0 ? "long" : "short";
+      const sideIcon = p.size > 0 ? ICONS.arrowUp : ICONS.arrowDown;
       const pnlClass = p.unrealized_pnl_usd >= 0 ? "metric-box__value--green" : "metric-box__value--red";
       return `
       <div class="position">
-        <span class="position__side position__side--${side}">${side}</span>
+        <span class="position__side position__side--${side}">${sideIcon} ${side}</span>
         <span class="position__symbol">${p.token_symbol}</span>
         <span class="position__value">${fmtUsd(p.position_value_usd)} · ${p.leverage_value}x</span>
         <span class="position__pnl ${pnlClass}">${fmtPnl(p.unrealized_pnl_usd)}</span>
@@ -124,16 +144,11 @@ function renderTraderCard(trader, rank) {
 }
 
 function renderAlertItem(alert) {
-  const icons = {
-    new_position: "🟢",
-    position_closed: "🔴",
-    position_changed: "🔄",
-    new_trade: "📊",
-  };
+  const iconHtml = ALERT_ICONS[alert.type] || ALERT_ICONS.new_trade;
 
   return `
   <div class="alert-item">
-    <div class="alert-item__icon">${icons[alert.type] || "📋"}</div>
+    ${iconHtml}
     <div class="alert-item__body">
       <div class="alert-item__header">
         <span class="alert-item__title">${alert.action} ${alert.symbol} ${alert.side}</span>
@@ -164,7 +179,7 @@ function renderDashboard(data) {
   if (state.traders.length === 0) {
     tradersEl.innerHTML = `
       <div class="empty-state" style="grid-column:1/-1">
-        <div class="empty-state__icon">⚡</div>
+        <div class="empty-state__icon">${ICONS.bolt}</div>
         <div>No traders discovered yet.<br>Daemon will poll automatically, or set NANSEN_API_KEY and restart.</div>
       </div>`;
   } else {
@@ -176,7 +191,7 @@ function renderDashboard(data) {
   if (state.alerts.length === 0) {
     alertsEl.innerHTML = `
       <div class="empty-state">
-        <div class="empty-state__icon">🔔</div>
+        <div class="empty-state__icon">${ICONS.bell}</div>
         <div>No alerts yet. Alerts appear when traders open/close positions.</div>
       </div>`;
   } else {
