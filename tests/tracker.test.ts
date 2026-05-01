@@ -81,6 +81,21 @@ describe("Tracker", () => {
       const traders = await discoverTraders();
       assert.equal(traders[0].address, "0xCACHED");
     });
+
+    it("handles missing data from API", async () => {
+      mock.method(global, "fetch", async (url: any) => {
+        if (url.toString().includes("perp-leaderboard")) {
+          return {
+            ok: true,
+            json: async () => ({}) // missing data array
+          };
+        }
+      });
+
+      cacheService.cacheClear(); // clear cache from previous test
+      const traders = await discoverTraders();
+      assert.equal(traders.length, 0);
+    });
   });
 
   describe("updateTrader", () => {
@@ -166,6 +181,116 @@ describe("Tracker", () => {
       assert.deepEqual(updated.positions, []);
       assert.deepEqual(updated.recentTrades, []);
       assert.equal(updated.error, undefined);
+    });
+
+    it("returns cached trader if available", async () => {
+      const trader: TrackedTrader = {
+        address: "0xCACHED_TRADER", label: "", totalPnl: 0, roi: 0, accountValue: 0,
+        positions: [], recentTrades: [], lastUpdated: ""
+      };
+      cacheService.cacheSet("trader:0xCACHED_TRADER", trader);
+      const updated = await updateTrader(trader);
+      assert.equal(updated.address, "0xCACHED_TRADER");
+    });
+
+    it("handles missing data arrays, string errors, and specific diffing branches including short positions", async () => {
+      const trader: TrackedTrader = {
+        address: "0xMISSING", label: "Missing", totalPnl: 0, roi: 0, accountValue: 0,
+        positions: [
+          // This will be closed in diff, and we need unrealized_pnl_usd to be missing
+          { token_symbol: "OLD2", size: -1, position_value_usd: 100, leverage_value: 1, entry_price_usd: 100 } as any
+        ],
+        recentTrades: [], lastUpdated: ""
+      };
+
+      // Test String error first
+      mock.method(global, "fetch", async (url: any) => {
+        if (url.toString().includes("perp-positions")) {
+          throw "String API Error";
+        }
+      });
+      const errRes = await updateTrader(trader);
+      assert.ok(errRes.error?.includes("String API Error"));
+
+      // Test missing data arrays & closed_pnl
+      mock.method(global, "fetch", async (url: any) => {
+        if (url.toString().includes("perp-positions")) {
+          return { 
+            ok: true, 
+            json: async () => ({}) // Missing array -> defaults to []
+          };
+        } else if (url.toString().includes("perp-trades")) {
+          return { 
+            ok: true, 
+            json: async () => ({ 
+              data: [
+                { token_symbol: "ETH", side: "Short", action: "Close", value_usd: 500, size: 5, price: 100, timestamp: "now", closed_pnl: 50 }
+              ] 
+            }) 
+          };
+        }
+      });
+      
+      const updated = await updateTrader(trader);
+      assert.deepEqual(updated.positions, []);
+      assert.equal(updated.recentTrades.length, 1);
+      assert.equal(updated.recentTrades[0].closed_pnl, 50);
+
+      const state = getState();
+      // Should have position_closed for OLD2
+      const oldAlert = state.alerts.find(a => a.type === "position_closed" && a.symbol === "OLD2");
+      assert.ok(oldAlert);
+      assert.ok(oldAlert.details.includes("$0.00")); // fallback to 0
+
+      // Should have new_trade with closed_pnl formatted
+      const tradeAlert = state.alerts.find(a => a.type === "new_trade" && a.symbol === "ETH" && a.details.includes("PnL"));
+      assert.ok(tradeAlert);
+    });
+
+    it("handles specific diffing branches including short positions", async () => {
+      const trader: TrackedTrader = {
+        address: "0xSHORT_TEST", label: "ShortTest", totalPnl: 0, roi: 0, accountValue: 0,
+        positions: [], recentTrades: [], lastUpdated: ""
+      };
+
+      mock.method(global, "fetch", async (url: any) => {
+        if (url.toString().includes("perp-positions")) {
+          return { 
+            ok: true, 
+            json: async () => ({
+              data: [
+                { token_symbol: "SHORT", size: -1, position_value_usd: 100, leverage_value: 1, entry_price_usd: 100 }
+              ]
+            }) 
+          }; // Returns a short position to trigger the 'Short' branch on line 157
+        } else if (url.toString().includes("perp-trades")) {
+          return { ok: true, json: async () => ({ data: [] }) };
+        }
+      });
+
+      const updated = await updateTrader(trader);
+      assert.equal(updated.positions.length, 1);
+
+      const state = getState();
+      // Should have new_position for SHORT (triggering Short side)
+      const shortAlert = state.alerts.find(a => a.type === "new_position" && a.symbol === "SHORT" && a.side === "Short");
+      assert.ok(shortAlert);
+    });
+
+    it("handles missing trades data array", async () => {
+      const trader: TrackedTrader = {
+        address: "0xMISSING2", label: "", totalPnl: 0, roi: 0, accountValue: 0,
+        positions: [], recentTrades: [], lastUpdated: ""
+      };
+      mock.method(global, "fetch", async (url: any) => {
+        if (url.toString().includes("perp-positions")) {
+          return { ok: true, json: async () => ({ data: [] }) };
+        } else if (url.toString().includes("perp-trades")) {
+          return { ok: true, json: async () => ({}) }; // Missing data array -> defaults to []
+        }
+      });
+      const updated = await updateTrader(trader);
+      assert.deepEqual(updated.recentTrades, []);
     });
   });
 
