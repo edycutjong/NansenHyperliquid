@@ -3,8 +3,9 @@
  */
 
 const REFRESH_INTERVAL = 30_000; // 30s
+let refreshTimer = null;
 
-// ── SVG Icons (replace all emoji) ──
+// ── SVG Icons ──
 
 const ICONS = {
   bolt: `<svg width="40" height="40" viewBox="0 0 52 52" fill="none"><defs><linearGradient id="eg" x1="0" y1="0" x2="52" y2="52"><stop offset="0%" stop-color="#50d2c1"/><stop offset="100%" stop-color="#1fa67d"/></linearGradient></defs><path d="M30 4L12 28h12L20 48l20-26H28L34 4h-4z" fill="url(#eg)" opacity="0.7"/></svg>`,
@@ -60,6 +61,60 @@ function timeAgo(iso) {
   return `${Math.floor(m / 60)}h ${m % 60}m ago`;
 }
 
+// ═══════════════════════════════════════════════
+// VIEW ROUTING
+// ═══════════════════════════════════════════════
+
+const landingView = document.getElementById("landingView");
+const dashboardView = document.getElementById("dashboardView");
+
+function showDashboard() {
+  landingView.classList.add("landing--exit");
+  setTimeout(() => {
+    landingView.style.display = "none";
+    dashboardView.style.display = "";
+    dashboardView.classList.add("dashboard--enter");
+    fetchDashboard();
+    refreshTimer = setInterval(fetchDashboard, REFRESH_INTERVAL);
+  }, 350);
+}
+
+function showLanding() {
+  dashboardView.style.display = "none";
+  dashboardView.classList.remove("dashboard--enter");
+  landingView.style.display = "";
+  void landingView.offsetWidth;
+  landingView.classList.remove("landing--exit");
+  if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
+}
+
+document.getElementById("ctaDashboard").addEventListener("click", showDashboard);
+document.getElementById("btnBack").addEventListener("click", showLanding);
+
+// ── Animated counter on landing ──
+function animateCounters() {
+  document.querySelectorAll("[data-count]").forEach(el => {
+    const target = parseInt(el.dataset.count);
+    const suffix = el.dataset.suffix || "";
+    const duration = 1200;
+    const start = performance.now();
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(target * eased);
+      el.textContent = current + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { animateCounters(); observer.disconnect(); } });
+});
+const bannerEl = document.querySelector(".stats-banner");
+if (bannerEl) observer.observe(bannerEl);
+
 // ── Tab Switching ──
 
 let activeTab = "traders";
@@ -76,7 +131,9 @@ function switchTab(tab) {
   });
 }
 
-// ── Rendering ──
+// ═══════════════════════════════════════════════
+// DASHBOARD RENDERING
+// ═══════════════════════════════════════════════
 
 function renderTraderCard(trader, rank) {
   if (trader.error) {
@@ -165,7 +222,7 @@ function renderDashboard(data) {
 
   // Stats bar
   const dot = document.getElementById("daemonDot");
-  dot.className = `stat__dot ${state.pollCount > 0 ? "" : "stat__dot--off"}`;
+  dot.className = `status-dot ${state.pollCount > 0 ? "" : "status-dot--off"}`;
   document.getElementById("daemonStatus").textContent =
     state.pollCount > 0 ? `Poll #${state.pollCount} · ${timeAgo(state.lastPollAt)}` : "Waiting...";
   document.getElementById("traderCount").textContent = state.traders.length;
@@ -211,7 +268,3 @@ async function fetchDashboard() {
     document.getElementById("daemonStatus").textContent = `Error: ${err.message}`;
   }
 }
-
-// ── Init ──
-fetchDashboard();
-setInterval(fetchDashboard, REFRESH_INTERVAL);
