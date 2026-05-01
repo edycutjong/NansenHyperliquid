@@ -16,60 +16,147 @@
     <div class="bg-mesh__orb bg-mesh__orb--3"></div>
   </div>
 
-  <header class="header">
-    <div class="header__icon">
-      <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-        <defs>
-          <linearGradient id="bolt-grad" x1="0" y1="0" x2="52" y2="52">
-            <stop offset="0%" stop-color="#50d2c1"/>
-            <stop offset="100%" stop-color="#1fa67d"/>
-          </linearGradient>
-          <filter id="bolt-glow">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-        <path d="M30 4L12 28h12L20 48l20-26H28L34 4h-4z" fill="url(#bolt-grad)" filter="url(#bolt-glow)" opacity="0.95"/>
-      </svg>
-    </div>
-    <h1 class="header__title">Hyperliquid Copytrade Tracker</h1>
-    <p class="header__subtitle">Autonomous monitoring of top perpetual traders — powered by Nansen</p>
-  </header>
+  <!-- ── LANDING VIEW ── -->
+  <div id="landingView" class="landing">
+    <nav class="nav">
+      <div class="nav__brand">
+        <svg width="28" height="28" viewBox="0 0 52 52" fill="none">
+          <defs>
+            <linearGradient id="nav-grad" x1="0" y1="0" x2="52" y2="52">
+              <stop offset="0%" stop-color="#50d2c1"/>
+              <stop offset="100%" stop-color="#1fa67d"/>
+            </linearGradient>
+          </defs>
+          <path d="M30 4L12 28h12L20 48l20-26H28L34 4h-4z" fill="url(#nav-grad)" opacity="0.9"/>
+        </svg>
+        <span>NansenHyperliquid</span>
+      </div>
+      <div class="nav__links">
+        <a href="https://github.com/edycutjong" target="_blank" class="nav__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        </a>
+      </div>
+    </nav>
 
-  <div class="stats-bar" id="statsBar">
-    <div class="stat">
-      <span class="stat__dot stat__dot--off" id="daemonDot"></span>
-      <span id="daemonStatus">Waiting for data...</span>
-    </div>
-    <div class="stat">
-      <svg class="stat__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      <span id="traderCount">0</span>&nbsp;traders
-    </div>
-    <div class="stat">
-      <svg class="stat__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
-      <span id="positionCount">0</span>&nbsp;positions
-    </div>
-    <div class="stat">
-      <svg class="stat__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      <span id="alertCount">0</span>&nbsp;alerts
-    </div>
+    <section class="hero">
+      <div class="hero__badge">
+        <span class="hero__badge-dot"></span>
+        Powered by Nansen API
+      </div>
+      <div class="hero__icon">
+        <svg width="72" height="72" viewBox="0 0 52 52" fill="none">
+          <defs>
+            <linearGradient id="bolt-grad" x1="0" y1="0" x2="52" y2="52">
+              <stop offset="0%" stop-color="#50d2c1"/>
+              <stop offset="100%" stop-color="#1fa67d"/>
+            </linearGradient>
+            <filter id="bolt-glow">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <path d="M30 4L12 28h12L20 48l20-26H28L34 4h-4z" fill="url(#bolt-grad)" filter="url(#bolt-glow)" opacity="0.95"/>
+        </svg>
+      </div>
+      <h1 class="hero__title">Hyperliquid Copytrade Tracker</h1>
+      <p class="hero__subtitle">Autonomous monitoring of top perpetual traders.<br>Track positions, PnL & real-time alerts — all from Nansen data.</p>
+      <button class="hero__cta" id="ctaDashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Open Dashboard
+      </button>
+    </section>
+
+    <section class="features">
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--teal">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="feature-card__title">Trader Discovery</h3>
+        <p class="feature-card__desc">Automatically discover top Hyperliquid traders ranked by PnL, ROI and account value.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--green">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        </div>
+        <h3 class="feature-card__title">Position Tracking</h3>
+        <p class="feature-card__desc">Monitor open perpetual positions with leverage, size, and unrealized PnL in real-time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--amber">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <h3 class="feature-card__title">Real-time Alerts</h3>
+        <p class="feature-card__desc">Get instant notifications when traders open, close, or modify their positions.</p>
+      </div>
+    </section>
+
+    <section class="stats-banner">
+      <div class="stats-banner__item">
+        <span class="stats-banner__value" data-count="30" data-suffix="s">0</span>
+        <span class="stats-banner__label">Refresh Rate</span>
+      </div>
+      <div class="stats-banner__item">
+        <span class="stats-banner__value" data-count="50">0</span>
+        <span class="stats-banner__label">Top Traders</span>
+      </div>
+      <div class="stats-banner__item">
+        <span class="stats-banner__value" data-count="5">0</span>
+        <span class="stats-banner__label">Positions/Trader</span>
+      </div>
+      <div class="stats-banner__item">
+        <span class="stats-banner__value" data-count="24" data-suffix="hr">0</span>
+        <span class="stats-banner__label">Trade History</span>
+      </div>
+    </section>
   </div>
 
-  <nav class="tabs">
-    <button class="tab tab--active" data-tab="traders" id="tabTraders">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      Traders
-    </button>
-    <button class="tab" data-tab="alerts" id="tabAlerts">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      Alerts
-    </button>
-  </nav>
+  <!-- ── DASHBOARD VIEW ── -->
+  <div id="dashboardView" class="dashboard" style="display:none">
+    <nav class="dash-nav">
+      <button class="dash-nav__back" id="btnBack">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        Back
+      </button>
+      <div class="dash-nav__brand">
+        <svg width="20" height="20" viewBox="0 0 52 52" fill="none"><path d="M30 4L12 28h12L20 48l20-26H28L34 4h-4z" fill="#50d2c1" opacity="0.7"/></svg>
+        Hyperliquid Tracker
+      </div>
+      <div class="dash-nav__stats" id="dashStats">
+        <div class="dash-stat">
+          <span class="status-dot status-dot--off" id="daemonDot"></span>
+          <span id="daemonStatus">Waiting...</span>
+        </div>
+        <div class="dash-stat">
+          <svg class="dash-stat__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span id="traderCount">0</span>&nbsp;traders
+        </div>
+        <div class="dash-stat">
+          <svg class="dash-stat__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+          <span id="positionCount">0</span>&nbsp;positions
+        </div>
+        <div class="dash-stat">
+          <svg class="dash-stat__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span id="alertCount">0</span>&nbsp;alerts
+        </div>
+      </div>
+    </nav>
 
-  <main class="container">
-    <div id="tradersView" class="trader-grid"></div>
-    <div id="alertsView" class="alerts-feed" style="display:none"></div>
-  </main>
+    <div class="dash-tabs">
+      <button class="tab tab--active" data-tab="traders" id="tabTraders">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Traders
+      </button>
+      <button class="tab" data-tab="alerts" id="tabAlerts">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Alerts
+      </button>
+    </div>
+
+    <main class="container">
+      <div id="tradersView" class="trader-grid"></div>
+      <div id="alertsView" class="alerts-feed" style="display:none"></div>
+    </main>
+  </div>
 
   <footer class="footer">
     <div class="footer__brand">
