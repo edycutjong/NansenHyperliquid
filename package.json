@@ -9,8 +9,8 @@
     "dev": "npm run build && node build/index.js",
     "start": "node build/index.js",
     "daemon": "npm run build && node build/daemon.js",
-    "test": "NODE_ENV=test node --import tsx --test tests/**/*.test.ts",
-    "test:coverage": "NODE_ENV=test c8 node --import tsx --test tests/**/*.test.ts",
+    "test": "NODE_ENV=test node --import tsx --test $(find tests -name '*.test.ts')",
+    "test:coverage": "NODE_ENV=test c8 node --import tsx --test $(find tests -name '*.test.ts')",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "ci": "npm run typecheck && npm run lint && npm run test:coverage"
