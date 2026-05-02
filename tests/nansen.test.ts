@@ -43,7 +43,7 @@ describe("Nansen API Client", () => {
     process.env.NANSEN_API_KEY = "test-key";
     
     const mockData = { data: [{ trader_address: "0x123", total_pnl: 50000 }] };
-    mock.method(global, "fetch", async (url: any, options: any) => {
+    mock.method(global, "fetch", async (url: string | URL | Request, options: RequestInit | undefined) => {
       assert.ok(url.toString().includes("/perp-leaderboard"));
       assert.equal(options.headers.apiKey, "test-key");
       
@@ -76,7 +76,7 @@ describe("Nansen API Client", () => {
     process.env.NANSEN_API_KEY = "test-key";
     
     const mockData = { data: [{ token_symbol: "BTC", size: 1 }] };
-    mock.method(global, "fetch", async (url: any, options: any) => {
+    mock.method(global, "fetch", async (url: string | URL | Request, options: RequestInit | undefined) => {
       assert.ok(url.toString().includes("/profiler/perp-positions"));
       
       const body = JSON.parse(options.body);
@@ -96,7 +96,7 @@ describe("Nansen API Client", () => {
     process.env.NANSEN_API_KEY = "test-key";
     
     const mockData = { data: [{ token_symbol: "ETH", side: "Long", action: "Open" }] };
-    mock.method(global, "fetch", async (url: any, options: any) => {
+    mock.method(global, "fetch", async (url: string | URL | Request, options: RequestInit | undefined) => {
       assert.ok(url.toString().includes("/profiler/perp-trades"));
       
       const body = JSON.parse(options.body);

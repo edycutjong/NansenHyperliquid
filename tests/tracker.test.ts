@@ -55,7 +55,7 @@ describe("Tracker", () => {
 
   describe("discoverTraders", () => {
     it("fetches leaderboard and returns initialized traders", async () => {
-      mock.method(global, "fetch", async (url: any) => {
+      mock.method(global, "fetch", async (url: string | URL | Request) => {
         if (url.toString().includes("perp-leaderboard")) {
           return {
             ok: true,
@@ -83,7 +83,7 @@ describe("Tracker", () => {
     });
 
     it("handles missing data from API", async () => {
-      mock.method(global, "fetch", async (url: any) => {
+      mock.method(global, "fetch", async (url: string | URL | Request) => {
         if (url.toString().includes("perp-leaderboard")) {
           return {
             ok: true,
@@ -107,13 +107,13 @@ describe("Tracker", () => {
         roi: 10,
         accountValue: 1000,
         positions: [{
-          token_symbol: "OLD", size: 1, position_value_usd: 100, leverage_value: 1, entry_price_usd: 100, unrealized_pnl_usd: 10
+          token_symbol: "OLD", size: 1, position_value_usd: 100, leverage_value: 1, entry_price_usd: 100, mark_price_usd: 100, unrealized_pnl_usd: 10
         }],
         recentTrades: [],
         lastUpdated: ""
       };
 
-      mock.method(global, "fetch", async (url: any) => {
+      mock.method(global, "fetch", async (url: string | URL | Request) => {
         if (url.toString().includes("perp-positions")) {
           return {
             ok: true,
@@ -169,7 +169,7 @@ describe("Tracker", () => {
         address: "0xERR_TRADES", label: "", totalPnl: 0, roi: 0, accountValue: 0, positions: [], recentTrades: [], lastUpdated: ""
       };
 
-      mock.method(global, "fetch", async (url: any) => {
+      mock.method(global, "fetch", async (url: string | URL | Request) => {
         if (url.toString().includes("perp-positions")) {
           return { ok: true, json: async () => ({ data: [] }) };
         } else if (url.toString().includes("perp-trades")) {
@@ -198,13 +198,13 @@ describe("Tracker", () => {
         address: "0xMISSING", label: "Missing", totalPnl: 0, roi: 0, accountValue: 0,
         positions: [
           // This will be closed in diff, and we need unrealized_pnl_usd to be missing
-          { token_symbol: "OLD2", size: -1, position_value_usd: 100, leverage_value: 1, entry_price_usd: 100 } as any
+          { token_symbol: "OLD2", size: -1, position_value_usd: 100, leverage_value: 1, entry_price_usd: 100, mark_price_usd: 100, unrealized_pnl_usd: 0 }
         ],
         recentTrades: [], lastUpdated: ""
       };
 
       // Test String error first
-      mock.method(global, "fetch", async (url: any) => {
+      mock.method(global, "fetch", async (url: string | URL | Request) => {
         if (url.toString().includes("perp-positions")) {
           throw "String API Error";
         }
@@ -213,7 +213,7 @@ describe("Tracker", () => {
       assert.ok(errRes.error?.includes("String API Error"));
 
       // Test missing data arrays & closed_pnl
-      mock.method(global, "fetch", async (url: any) => {
+      mock.method(global, "fetch", async (url: string | URL | Request) => {
         if (url.toString().includes("perp-positions")) {
           return { 
             ok: true, 
@@ -253,7 +253,7 @@ describe("Tracker", () => {
         positions: [], recentTrades: [], lastUpdated: ""
       };
 
-      mock.method(global, "fetch", async (url: any) => {
+      mock.method(global, "fetch", async (url: string | URL | Request) => {
         if (url.toString().includes("perp-positions")) {
           return { 
             ok: true, 
@@ -282,7 +282,7 @@ describe("Tracker", () => {
         address: "0xMISSING2", label: "", totalPnl: 0, roi: 0, accountValue: 0,
         positions: [], recentTrades: [], lastUpdated: ""
       };
-      mock.method(global, "fetch", async (url: any) => {
+      mock.method(global, "fetch", async (url: string | URL | Request) => {
         if (url.toString().includes("perp-positions")) {
           return { ok: true, json: async () => ({ data: [] }) };
         } else if (url.toString().includes("perp-trades")) {
@@ -296,7 +296,7 @@ describe("Tracker", () => {
 
   describe("pollCycle", () => {
     it("discovers traders and updates them", async () => {
-      mock.method(global, "fetch", async (url: any) => {
+      mock.method(global, "fetch", async (url: string | URL | Request) => {
         if (url.toString().includes("perp-leaderboard")) {
           return {
             ok: true,
